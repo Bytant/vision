@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -28,6 +30,7 @@ const formSchema = z.object({
 
 const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,6 +44,8 @@ const SignUpForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+    setNetworkError(false);
+    
     try {
       console.log("Attempting to sign up with:", { email: values.email });
       
@@ -73,11 +78,16 @@ const SignUpForm = () => {
     } catch (error: any) {
       console.error("Sign up error:", error);
       
-      toast({
-        variant: "destructive",
-        title: "Sign up failed",
-        description: error?.message || "There was a problem with your request.",
-      });
+      // Check if it's a network error
+      if (error.message === "Failed to fetch" || error.code === "NETWORK_ERROR") {
+        setNetworkError(true);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Sign up failed",
+          description: error?.message || "There was a problem with your request.",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -91,6 +101,16 @@ const SignUpForm = () => {
           Sign up to track your vision test results
         </p>
       </div>
+      
+      {networkError && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertTitle>Connection Error</AlertTitle>
+          <AlertDescription>
+            Unable to connect to the authentication service. This demo app requires valid Supabase credentials.
+            Please set up your Supabase project and update the environment variables.
+          </AlertDescription>
+        </Alert>
+      )}
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
