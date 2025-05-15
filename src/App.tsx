@@ -5,7 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { createClient } from "@supabase/supabase-js";
 import RouteGuard from "./components/auth/RouteGuard";
 
 import Index from "./pages/Index";
@@ -20,10 +19,6 @@ import SignUp from "./pages/SignUp";
 import LearnMore from "./pages/LearnMore";
 
 const queryClient = new QueryClient();
-// Create supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const AppWithProviders = () => (
   <BrowserRouter>
