@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,7 +42,14 @@ const SignUpForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      console.log("Attempting to sign up with:", { email: values.email });
+      
+      // Check if Supabase is properly initialized
+      if (!supabase.auth) {
+        throw new Error("Supabase client is not properly initialized");
+      }
+
+      const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
@@ -55,6 +61,8 @@ const SignUpForm = () => {
         throw error;
       }
 
+      console.log("Sign up response:", data);
+      
       toast({
         title: "Verification email sent",
         description: "Please check your email to verify your account.",
@@ -63,6 +71,8 @@ const SignUpForm = () => {
       // Redirect to sign in after successful sign up
       navigate("/signin");
     } catch (error: any) {
+      console.error("Sign up error:", error);
+      
       toast({
         variant: "destructive",
         title: "Sign up failed",
