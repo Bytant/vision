@@ -1,5 +1,5 @@
 
-import { Eye } from "lucide-react";
+import { Eye, Facebook, Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -15,6 +15,23 @@ const Footer = () => {
             <p className="text-sm text-neutral">
               Providing accessible vision care through innovative technology and expert guidance.
             </p>
+            <div className="flex space-x-4 pt-2">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-neutral hover:text-primary transition-colors">
+                <Facebook size={20} />
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-neutral hover:text-primary transition-colors">
+                <Twitter size={20} />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-neutral hover:text-primary transition-colors">
+                <Instagram size={20} />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-neutral hover:text-primary transition-colors">
+                <Linkedin size={20} />
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-neutral hover:text-primary transition-colors">
+                <Youtube size={20} />
+              </a>
+            </div>
           </div>
           <div className="space-y-3">
             <h3 className="font-medium text-neutral-dark">Vision Tests</h3>
@@ -25,7 +42,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/tests/color-blindness" className="text-neutral hover:text-primary transition-colors">
+                <Link to="/tests/color-vision" className="text-neutral hover:text-primary transition-colors">
                   Color Vision Test
                 </Link>
               </li>
@@ -45,8 +62,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="text-neutral hover:text-primary transition-colors">
-                  FAQ
+                <Link to="/learn-more" className="text-neutral hover:text-primary transition-colors">
+                  Learn More
                 </Link>
               </li>
               <li>
@@ -75,6 +92,9 @@ const Footer = () => {
         <div className="mt-10 border-t border-gray-200 pt-6">
           <p className="text-center text-xs text-neutral">
             © {new Date().getFullYear()} EyeVision Care. All rights reserved.
+          </p>
+          <p className="text-center text-xs text-neutral mt-1">
+            Disclaimer: This is an online vision screening tool and not a substitute for a comprehensive eye examination by a healthcare professional.
           </p>
         </div>
       </div>

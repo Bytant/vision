@@ -1,9 +1,19 @@
 
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  
+  const handleGetStarted = () => {
+    if (user) {
+      navigate("/tests");
+    } else {
+      navigate("/signup");
+    }
+  };
   
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-primary-light">
@@ -21,13 +31,14 @@ const Hero = () => {
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Button 
                 className="bg-primary hover:bg-primary/90"
-                onClick={() => navigate("/tests")}
+                onClick={handleGetStarted}
               >
-                Start Vision Test
+                Get Started
               </Button>
               <Button 
                 variant="outline" 
                 className="border-primary text-primary hover:bg-primary/10"
+                onClick={() => navigate("/learn-more")}
               >
                 Learn More
               </Button>

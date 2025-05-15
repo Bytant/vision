@@ -4,6 +4,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { createClientComponentClient } from "@supabase/auth-helpers-react";
+import RouteGuard from "./components/auth/RouteGuard";
+
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Tests from "./pages/Tests";
@@ -11,26 +15,55 @@ import VisualAcuityTest from "./pages/VisualAcuityTest";
 import ColorVisionTest from "./pages/ColorVisionTest";
 import TestResults from "./pages/TestResults";
 import About from "./pages/About";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import LearnMore from "./pages/LearnMore";
 
 const queryClient = new QueryClient();
+const supabase = createClientComponentClient();
+
+const AppWithProviders = () => (
+  <BrowserRouter>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/tests" element={
+          <RouteGuard>
+            <Tests />
+          </RouteGuard>
+        } />
+        <Route path="/tests/visual-acuity" element={
+          <RouteGuard>
+            <VisualAcuityTest />
+          </RouteGuard>
+        } />
+        <Route path="/tests/color-vision" element={
+          <RouteGuard>
+            <ColorVisionTest />
+          </RouteGuard>
+        } />
+        <Route path="/test-results" element={
+          <RouteGuard>
+            <TestResults />
+          </RouteGuard>
+        } />
+        <Route path="/about" element={<About />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/learn-more" element={<LearnMore />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AuthProvider>
+  </BrowserRouter>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/tests" element={<Tests />} />
-          <Route path="/tests/visual-acuity" element={<VisualAcuityTest />} />
-          <Route path="/tests/color-vision" element={<ColorVisionTest />} />
-          <Route path="/test-results" element={<TestResults />} />
-          <Route path="/about" element={<About />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AppWithProviders />
     </TooltipProvider>
   </QueryClientProvider>
 );
