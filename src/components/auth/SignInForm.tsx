@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -30,13 +30,12 @@ const SignInForm = () => {
   const location = useLocation();
   const { user } = useAuth();
   
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user) {
-      const from = location.state?.from?.pathname || '/';
-      navigate(from, { replace: true });
-    }
-  }, [user, navigate, location]);
+  // If already logged in, redirect to home or the intended page
+  if (user) {
+    const from = location.state?.from?.pathname || '/';
+    navigate(from, { replace: true });
+    return null; // Return null to prevent rendering the form
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,14 +62,13 @@ const SignInForm = () => {
         description: "Welcome back!",
       });
       
-      // Redirect handled by the useEffect above
+      // Auth state change will handle the redirect
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Sign in failed",
         description: error?.message || "Please check your credentials and try again.",
       });
-    } finally {
       setIsLoading(false);
     }
   };

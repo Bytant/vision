@@ -27,7 +27,15 @@ const AppWithProviders = () => (
   <BrowserRouter>
     <AuthProvider>
       <Routes>
+        {/* Public routes that don't require authentication */}
         <Route path="/" element={<Index />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/learn-more" element={<LearnMore />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        
+        {/* Protected routes that require authentication */}
         <Route path="/tests" element={
           <RouteGuard>
             <Tests />
@@ -58,12 +66,8 @@ const AppWithProviders = () => (
             <TestResults />
           </RouteGuard>
         } />
-        <Route path="/about" element={<About />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/learn-more" element={<LearnMore />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        
+        {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthProvider>
