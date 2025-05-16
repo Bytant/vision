@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, signOut, userProfile } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -49,13 +49,18 @@ const Navbar = () => {
         {/* Desktop auth buttons */}
         <div className="hidden md:flex items-center gap-4">
           {user ? (
-            <Button 
-              variant="outline" 
-              onClick={() => signOut()}
-              className="hidden md:flex"
-            >
-              Sign Out
-            </Button>
+            <>
+              <div className="text-sm text-neutral-dark">
+                Welcome back, <span className="font-semibold">{userProfile?.username || 'User'}</span>
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={() => signOut()}
+                className="hidden md:flex"
+              >
+                Sign Out
+              </Button>
+            </>
           ) : (
             <>
               <Button 
@@ -93,6 +98,11 @@ const Navbar = () => {
             </div>
             
             <nav className="container px-4 py-8 flex flex-col space-y-4">
+              {user && (
+                <div className="text-lg font-medium text-neutral-dark mb-2">
+                  Welcome back, <span className="font-semibold">{userProfile?.username || 'User'}</span>
+                </div>
+              )}
               <Link 
                 to="/" 
                 className="text-lg font-medium text-neutral-dark hover:text-primary transition-colors"

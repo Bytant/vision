@@ -52,7 +52,8 @@ const SignInForm = () => {
         description: "Welcome back!",
       });
       
-      navigate("/tests");
+      // Redirect to home page after successful sign in
+      navigate("/");
     } catch (error: any) {
       toast({
         variant: "destructive",

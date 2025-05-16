@@ -20,6 +20,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const formSchema = z.object({
+  username: z.string().min(3, { message: "Username must be at least 3 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
   confirmPassword: z.string().min(6, { message: "Confirm password is required" }),
@@ -36,6 +37,7 @@ const SignUpForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -47,7 +49,7 @@ const SignUpForm = () => {
     setNetworkError(false);
     
     try {
-      console.log("Attempting to sign up with:", { email: values.email });
+      console.log("Attempting to sign up with:", { email: values.email, username: values.username });
       
       // Check if Supabase is properly initialized
       if (!supabase.auth) {
@@ -59,6 +61,9 @@ const SignUpForm = () => {
         password: values.password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            username: values.username,
+          },
         },
       });
 
@@ -113,6 +118,24 @@ const SignUpForm = () => {
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="johndoe" 
+                    {...field} 
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
           <FormField
             control={form.control}
             name="email"

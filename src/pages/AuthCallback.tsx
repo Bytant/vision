@@ -15,8 +15,8 @@ const AuthCallback = () => {
         console.error('Error during auth callback:', error);
         navigate('/signin?error=auth-callback-failed');
       } else {
-        // Successfully authenticated
-        navigate('/tests');
+        // Successfully authenticated, redirect to home page
+        navigate('/');
       }
     };
 
