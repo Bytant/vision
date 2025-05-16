@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -106,8 +106,7 @@ const SignUpForm = () => {
         <Alert variant="destructive" className="mb-4">
           <AlertTitle>Connection Error</AlertTitle>
           <AlertDescription>
-            Unable to connect to the authentication service. This demo app requires valid Supabase credentials.
-            Please set up your Supabase project and update the environment variables.
+            Unable to connect to the authentication service. Please ensure you have configured your Supabase credentials correctly.
           </AlertDescription>
         </Alert>
       )}
