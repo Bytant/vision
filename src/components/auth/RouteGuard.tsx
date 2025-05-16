@@ -2,6 +2,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 interface RouteGuardProps {
   children: React.ReactNode;
@@ -11,12 +12,17 @@ const RouteGuard = ({ children }: RouteGuardProps) => {
   const { user, isLoading } = useAuth();
   const location = useLocation();
 
-  // If auth is still loading, show nothing or loading indicator
+  // If auth is still loading, show loading indicator
   if (isLoading) {
-    return <div className="h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="h-screen flex flex-col items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <p className="text-neutral">Loading your session...</p>
+      </div>
+    );
   }
 
-  // If user is not authenticated, redirect to sign in
+  // If user is not authenticated, redirect to sign in with current location
   if (!user) {
     toast({
       title: "Authentication required",

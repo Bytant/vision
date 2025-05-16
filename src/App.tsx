@@ -12,6 +12,8 @@ import NotFound from "./pages/NotFound";
 import Tests from "./pages/Tests";
 import VisualAcuityTest from "./pages/VisualAcuityTest";
 import ColorVisionTest from "./pages/ColorVisionTest";
+import AstigmatismTest from "./pages/AstigmatismTest";
+import ContrastSensitivityTest from "./pages/ContrastSensitivityTest";
 import TestResults from "./pages/TestResults";
 import About from "./pages/About";
 import SignIn from "./pages/SignIn";
@@ -39,6 +41,16 @@ const AppWithProviders = () => (
         <Route path="/tests/color-vision" element={
           <RouteGuard>
             <ColorVisionTest />
+          </RouteGuard>
+        } />
+        <Route path="/tests/astigmatism" element={
+          <RouteGuard>
+            <AstigmatismTest />
+          </RouteGuard>
+        } />
+        <Route path="/tests/contrast-sensitivity" element={
+          <RouteGuard>
+            <ContrastSensitivityTest />
           </RouteGuard>
         } />
         <Route path="/test-results" element={

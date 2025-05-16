@@ -1,27 +1,34 @@
 
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Handle the OAuth or email confirmation callback
     const handleAuthCallback = async () => {
-      const { error } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getSession();
       
       if (error) {
         console.error('Error during auth callback:', error);
         navigate('/signin?error=auth-callback-failed');
+      } else if (data.session) {
+        // Get the intended destination or default to home page
+        const from = location.state?.from?.pathname || '/';
+        
+        // Successfully authenticated, redirect to intended destination
+        navigate(from, { replace: true });
       } else {
-        // Successfully authenticated, redirect to home page
-        navigate('/');
+        // No session, redirect to sign in
+        navigate('/signin');
       }
     };
 
     handleAuthCallback();
-  }, [navigate]);
+  }, [navigate, location]);
 
   return (
     <div className="h-screen flex flex-col items-center justify-center">

@@ -2,7 +2,8 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, Smartphone, Monitor } from "lucide-react";
+import { AlertCircle, Smartphone, Monitor, Ruler } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const LearnMore = () => {
   return (
@@ -40,11 +41,24 @@ const LearnMore = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  <div className="overflow-hidden rounded-lg border border-gray-200">
+                    <AspectRatio ratio={16/9}>
+                      <img 
+                        src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d" 
+                        alt="Person using desktop computer at correct distance" 
+                        className="object-cover w-full h-full"
+                      />
+                    </AspectRatio>
+                    <div className="bg-gray-50 p-2 text-xs text-center border-t">
+                      Maintain approximately 60 cm (24 inches) from your screen
+                    </div>
+                  </div>
+
                   <p>
                     For optimal results when taking our vision tests on a desktop computer or laptop, please follow these guidelines:
                   </p>
                   <ul className="list-disc pl-5 space-y-2">
-                    <li>Sit approximately 2 feet (60 cm) from your screen</li>
+                    <li>Sit approximately 60 cm (24 inches) from your screen</li>
                     <li>Ensure your screen is clean and free from glare</li>
                     <li>Adjust your screen brightness to a comfortable level</li>
                     <li>If you normally wear glasses or contacts for distance viewing, wear them during the test</li>
@@ -61,11 +75,24 @@ const LearnMore = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  <div className="overflow-hidden rounded-lg border border-gray-200">
+                    <AspectRatio ratio={16/9}>
+                      <img 
+                        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
+                        alt="Person holding mobile device at arm's length" 
+                        className="object-cover w-full h-full"
+                      />
+                    </AspectRatio>
+                    <div className="bg-gray-50 p-2 text-xs text-center border-t">
+                      Hold your device at arm's length (40-50 cm)
+                    </div>
+                  </div>
+
                   <p>
                     When using a mobile device for our vision tests, please follow these additional instructions:
                   </p>
                   <ul className="list-disc pl-5 space-y-2">
-                    <li>Hold your device at arm's length (approximately 15-20 inches or 40-50 cm)</li>
+                    <li>Hold your device at arm's length (approximately 40-50 cm)</li>
                     <li>Ensure maximum screen brightness</li>
                     <li>Disable auto-rotation and hold your device in portrait orientation</li>
                     <li>Use your device in a well-lit environment without screen glare</li>
@@ -73,6 +100,38 @@ const LearnMore = () => {
                     <li>Avoid taking tests while moving or in a vehicle</li>
                   </ul>
                 </CardContent>
+              </Card>
+            </div>
+
+            <div className="mt-12 space-y-4">
+              <Card className="p-6 flex flex-col md:flex-row gap-6 items-center">
+                <div className="w-full md:w-1/2">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Ruler className="h-5 w-5 text-primary" />
+                    <h2 className="text-xl font-bold">Proper Testing Distance</h2>
+                  </div>
+                  <p className="mb-4">
+                    Maintaining the correct distance from your screen is crucial for accurate test results. You should be:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-2">
+                    <li><strong>Desktop/laptop:</strong> 60 cm (24 inches) from screen</li>
+                    <li><strong>Mobile/tablet:</strong> 40-50 cm (arm's length) from screen</li>
+                  </ul>
+                  <p className="mt-4 text-sm text-neutral italic">
+                    Tip: Use a measuring tape once to get a feel for the correct distance, then use visual landmarks to maintain that distance during tests.
+                  </p>
+                </div>
+                <div className="w-full md:w-1/2">
+                  <div className="overflow-hidden rounded-lg border border-gray-200">
+                    <AspectRatio ratio={4/3}>
+                      <img 
+                        src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6" 
+                        alt="Proper testing distance diagram" 
+                        className="object-cover w-full h-full"
+                      />
+                    </AspectRatio>
+                  </div>
+                </div>
               </Card>
             </div>
 
@@ -155,6 +214,32 @@ const LearnMore = () => {
                     If you notice that lines in certain directions appear more distinct or blurred than others, this may indicate 
                     astigmatism. Results will suggest whether you might have astigmatism and recommend appropriate follow-up with an 
                     eye care professional.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Contrast Sensitivity Test</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p>
+                    The Contrast Sensitivity Test measures your ability to distinguish objects from their background at varying levels of contrast.
+                  </p>
+                  
+                  <h3 className="font-semibold mt-4">How to Take the Test:</h3>
+                  <ul className="list-disc pl-5 space-y-2">
+                    <li>Position yourself at the recommended distance from your screen</li>
+                    <li>Identify letters of decreasing contrast against the background</li>
+                    <li>Enter the letter you see or your best guess</li>
+                    <li>Continue until you complete all test patterns</li>
+                  </ul>
+                  
+                  <h3 className="font-semibold mt-4">Understanding Your Results:</h3>
+                  <p>
+                    Your contrast sensitivity score indicates how well you can detect subtle differences in contrast. Reduced contrast sensitivity 
+                    can make it difficult to see in low light conditions or foggy environments, even if your visual acuity is normal. If your score 
+                    suggests reduced contrast sensitivity, a follow-up with an eye care professional is recommended.
                   </p>
                 </CardContent>
               </Card>

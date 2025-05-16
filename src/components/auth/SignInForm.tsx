@@ -1,10 +1,11 @@
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/context/AuthContext";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,16 @@ const formSchema = z.object({
 const SignInForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+  
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, location]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,8 +63,7 @@ const SignInForm = () => {
         description: "Welcome back!",
       });
       
-      // Redirect to home page after successful sign in
-      navigate("/");
+      // Redirect handled by the useEffect above
     } catch (error: any) {
       toast({
         variant: "destructive",
