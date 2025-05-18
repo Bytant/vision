@@ -21,6 +21,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import LearnMore from "./pages/LearnMore";
 import AuthCallback from "./pages/AuthCallback";
+import DataPolicy from "./pages/DataPolicy";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const AppWithProviders = () => (
         <Route path="/signup" element={<SignUp />} />
         <Route path="/learn-more" element={<LearnMore />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/data-policy" element={<DataPolicy />} />
         
         {/* Protected routes that require authentication */}
         <Route path="/tests" element={
@@ -60,11 +62,6 @@ const AppWithProviders = () => (
         <Route path="/tests/contrast-sensitivity" element={
           <RouteGuard>
             <ContrastSensitivityTest />
-          </RouteGuard>
-        } />
-        <Route path="/cataract-test" element={
-          <RouteGuard>
-            <CataractTest />
           </RouteGuard>
         } />
         <Route path="/tests/cataract" element={

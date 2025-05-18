@@ -17,6 +17,7 @@ const CataractTest = () => {
   const [confidence, setConfidence] = useState(0);
   const [imageData, setImageData] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
   
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -35,6 +36,7 @@ const CataractTest = () => {
 
   const startCamera = async () => {
     try {
+      setCameraError(null);
       console.log("Attempting to start camera...");
       
       // Stop any existing stream before starting a new one
@@ -42,20 +44,25 @@ const CataractTest = () => {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
       
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      const constraints = { 
         video: { 
           facingMode: "user",
           width: { ideal: 1280 },
           height: { ideal: 720 }
         } 
-      });
+      };
       
-      console.log("Camera access granted");
+      console.log("Requesting media with constraints:", constraints);
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      
+      console.log("Camera access granted, stream tracks:", stream.getTracks().length);
       streamRef.current = stream;
       
       if (videoRef.current) {
+        console.log("Setting video source object");
         videoRef.current.srcObject = stream;
         videoRef.current.onloadedmetadata = () => {
+          console.log("Video metadata loaded, attempting to play");
           if (videoRef.current) {
             videoRef.current.play()
               .then(() => {
@@ -64,6 +71,7 @@ const CataractTest = () => {
               })
               .catch(err => {
                 console.error("Error playing video:", err);
+                setCameraError("Could not play video stream. Please check camera permissions.");
                 toast({
                   variant: "destructive",
                   title: "Camera error",
@@ -74,11 +82,13 @@ const CataractTest = () => {
         };
       } else {
         console.error("Video reference is null");
+        setCameraError("Video element not found");
       }
       
       setStep(1);
     } catch (err) {
       console.error("Error accessing camera:", err);
+      setCameraError(err instanceof Error ? err.message : "Unknown camera error");
       toast({
         variant: "destructive",
         title: "Camera access denied",
@@ -199,27 +209,44 @@ const CataractTest = () => {
             </CardHeader>
             <CardContent className="space-y-4 items-center flex flex-col">
               <div className="relative w-full max-w-md aspect-video bg-black rounded-lg overflow-hidden">
-                <video 
-                  ref={videoRef} 
-                  className="w-full h-full object-cover"
-                  autoPlay 
-                  playsInline
-                  muted
-                />
+                {cameraError ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white p-4">
+                    <div className="text-center">
+                      <XCircle className="h-8 w-8 mx-auto mb-2 text-red-500" />
+                      <p>Camera error: {cameraError}</p>
+                      <Button 
+                        className="mt-4 bg-primary hover:bg-primary/90" 
+                        onClick={startCamera}
+                      >
+                        Retry Camera
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <video 
+                      ref={videoRef} 
+                      className="w-full h-full object-cover"
+                      autoPlay 
+                      playsInline
+                      muted
+                    />
+                    
+                    {!cameraActive && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
+                        <div className="text-center">
+                          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+                          <p>Starting camera...</p>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
                 
                 {/* Hidden canvas for capturing the image */}
                 <canvas ref={canvasRef} className="hidden" />
                 
                 <div className="absolute inset-0 border-2 border-dashed border-white/70 m-8 rounded-lg pointer-events-none"></div>
-                
-                {!cameraActive && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
-                    <div className="text-center">
-                      <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
-                      <p>Starting camera...</p>
-                    </div>
-                  </div>
-                )}
               </div>
               
               <div className="flex gap-3 mt-4">

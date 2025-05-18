@@ -1,21 +1,26 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
+import { useRef } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, ArrowRight, Printer, CalendarPlus, Share2 } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
+import { printTestResults } from "@/utils/printResults";
 
 const TestResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { score, totalQuestions, testType, result } = location.state || {};
+  const resultsRef = useRef<HTMLDivElement>(null);
   
   const getTestTitle = () => {
     switch(testType) {
       case "visual-acuity": return "Visual Acuity Test";
       case "color-vision": return "Color Vision Test";
       case "astigmatism": return "Astigmatism Test";
+      case "contrast-sensitivity": return "Contrast Sensitivity Test";
+      case "cataract": return "Cataract Screening Test";
       default: return "Vision Test";
     }
   };
@@ -116,6 +121,29 @@ const TestResults = () => {
     };
   };
   
+  const handlePrintResults = async () => {
+    const result = await printTestResults('test-results-card', {
+      testType: getTestTitle(),
+      score,
+      totalQuestions,
+      result,
+      testDate: new Date().toLocaleDateString()
+    });
+    
+    if (result) {
+      toast({
+        title: "PDF Generated",
+        description: "Your test results have been downloaded as a PDF."
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not generate PDF. Please try again."
+      });
+    }
+  };
+  
   if (!score && score !== 0) {
     // Redirect if no test data
     setTimeout(() => navigate("/tests"), 100);
@@ -141,7 +169,7 @@ const TestResults = () => {
                 </p>
               </div>
               
-              <Card className="w-full max-w-2xl">
+              <Card className="w-full max-w-2xl" id="test-results-card" ref={resultsRef}>
                 <CardHeader className="pb-4">
                   <div className="flex justify-center mb-4">
                     <div className="p-3 bg-primary-light rounded-full">
@@ -179,7 +207,12 @@ const TestResults = () => {
                     </div>
                     
                     <div className="flex flex-wrap gap-2 mt-4">
-                      <Button variant="outline" size="sm" className="flex items-center gap-1">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex items-center gap-1"
+                        onClick={handlePrintResults}
+                      >
                         <Printer className="h-4 w-4" />
                         Print Results
                       </Button>

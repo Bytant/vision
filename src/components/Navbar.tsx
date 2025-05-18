@@ -4,10 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import LogoutDialog from "./LogoutDialog";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, signOut, userProfile } = useAuth();
+  const { user, userProfile } = useAuth();
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -45,6 +46,9 @@ const Navbar = () => {
           <Link to="/about" className="text-sm font-medium text-neutral-dark hover:text-primary transition-colors">
             About Us
           </Link>
+          <Link to="/data-policy" className="text-sm font-medium text-neutral-dark hover:text-primary transition-colors">
+            Data Policy
+          </Link>
         </nav>
         
         {/* Desktop auth buttons */}
@@ -54,13 +58,14 @@ const Navbar = () => {
               <div className="text-sm text-neutral-dark">
                 Welcome back, <span className="font-semibold">{userProfile?.username || 'User'}</span>
               </div>
-              <Button 
-                variant="outline" 
-                onClick={() => signOut()}
-                className="hidden md:flex"
-              >
-                Sign Out
-              </Button>
+              <LogoutDialog>
+                <Button 
+                  variant="outline" 
+                  className="hidden md:flex"
+                >
+                  Sign Out
+                </Button>
+              </LogoutDialog>
             </>
           ) : (
             <>
@@ -132,19 +137,24 @@ const Navbar = () => {
               >
                 About Us
               </Link>
+              <Link 
+                to="/data-policy" 
+                className="text-lg font-medium text-neutral-dark hover:text-primary transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Data Policy
+              </Link>
               
               <div className="pt-4 flex flex-col gap-2">
                 {user ? (
-                  <Button 
-                    variant="outline" 
-                    onClick={() => {
-                      signOut();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full"
-                  >
-                    Sign Out
-                  </Button>
+                  <LogoutDialog>
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                    >
+                      Sign Out
+                    </Button>
+                  </LogoutDialog>
                 ) : (
                   <>
                     <Button 
