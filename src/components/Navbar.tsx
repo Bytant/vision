@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut, userProfile } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -66,13 +67,13 @@ const Navbar = () => {
               <Button 
                 variant="outline" 
                 className="hidden md:flex"
-                onClick={() => window.location.href = "/signin"}
+                onClick={() => navigate("/signin")}
               >
                 Sign In
               </Button>
               <Button 
                 className="bg-primary hover:bg-primary/90"
-                onClick={() => window.location.href = "/signup"}
+                onClick={() => navigate("/signup")}
               >
                 Get Started
               </Button>
@@ -150,7 +151,7 @@ const Navbar = () => {
                       variant="outline" 
                       className="w-full"
                       onClick={() => {
-                        window.location.href = "/signin";
+                        navigate("/signin");
                         setIsMenuOpen(false);
                       }}
                     >
@@ -159,7 +160,7 @@ const Navbar = () => {
                     <Button 
                       className="w-full bg-primary hover:bg-primary/90"
                       onClick={() => {
-                        window.location.href = "/signup";
+                        navigate("/signup");
                         setIsMenuOpen(false);
                       }}
                     >

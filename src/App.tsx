@@ -14,6 +14,7 @@ import VisualAcuityTest from "./pages/VisualAcuityTest";
 import ColorVisionTest from "./pages/ColorVisionTest";
 import AstigmatismTest from "./pages/AstigmatismTest";
 import ContrastSensitivityTest from "./pages/ContrastSensitivityTest";
+import CataractTest from "./pages/CataractTest";
 import TestResults from "./pages/TestResults";
 import About from "./pages/About";
 import SignIn from "./pages/SignIn";
@@ -59,6 +60,11 @@ const AppWithProviders = () => (
         <Route path="/tests/contrast-sensitivity" element={
           <RouteGuard>
             <ContrastSensitivityTest />
+          </RouteGuard>
+        } />
+        <Route path="/tests/cataract" element={
+          <RouteGuard>
+            <CataractTest />
           </RouteGuard>
         } />
         <Route path="/test-results" element={

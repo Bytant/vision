@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,11 +31,12 @@ const SignInForm = () => {
   const { user } = useAuth();
   
   // If already logged in, redirect to home or the intended page
-  if (user) {
-    const from = location.state?.from?.pathname || '/';
-    navigate(from, { replace: true });
-    return null; // Return null to prevent rendering the form
-  }
+  useEffect(() => {
+    if (user) {
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, location]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,6 +73,11 @@ const SignInForm = () => {
       setIsLoading(false);
     }
   };
+
+  // If already authenticated, don't render the form
+  if (user) {
+    return null;
+  }
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6 p-4">

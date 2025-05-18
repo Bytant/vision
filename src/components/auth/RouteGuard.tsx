@@ -25,7 +25,12 @@ const RouteGuard = ({ children }: RouteGuardProps) => {
   // If user is not authenticated, redirect to sign in with current location
   if (!user) {
     // Only show toast if user is trying to access a protected route (not on initial load)
-    if (location.pathname !== "/") {
+    if (location.pathname !== "/" && 
+        location.pathname !== "/signin" && 
+        location.pathname !== "/signup" && 
+        location.pathname !== "/auth/callback" &&
+        location.pathname !== "/learn-more" &&
+        location.pathname !== "/about") {
       toast({
         title: "Authentication required",
         description: "Please sign in to access this feature",

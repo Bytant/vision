@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, Palette, Grid, Activity } from "lucide-react";
+import { Eye, Palette, Grid, Activity, Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Tests = () => {
@@ -41,6 +41,15 @@ const Tests = () => {
       path: "/tests/contrast-sensitivity",
       time: "2-3 minutes",
       buttonText: "Start Test"
+    },
+    {
+      title: "Cataract Screening",
+      description: "Screen for potential cataracts using our CNN-powered image analysis",
+      icon: <Camera className="h-6 w-6" />,
+      path: "/tests/cataract",
+      time: "3-4 minutes",
+      buttonText: "Start Screening",
+      highlight: true
     }
   ];
 
@@ -61,20 +70,26 @@ const Tests = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {testCards.map((card, index) => (
-                <Card key={index} className="overflow-hidden transition-all hover:shadow-lg">
-                  <CardHeader className="bg-primary/5 flex flex-row items-center gap-4 pb-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
+                <Card 
+                  key={index} 
+                  className={`overflow-hidden transition-all hover:shadow-lg ${card.highlight ? 'border-primary/70 shadow-md' : ''}`}
+                >
+                  <CardHeader className={`${card.highlight ? 'bg-primary/10' : 'bg-primary/5'} flex flex-row items-center gap-4 pb-4`}>
+                    <div className={`${card.highlight ? 'bg-primary/20' : 'bg-primary/10'} p-3 rounded-full`}>
                       {card.icon}
                     </div>
                     <div>
-                      <CardTitle className="text-xl">{card.title}</CardTitle>
+                      <CardTitle className="text-xl">
+                        {card.title}
+                        {card.highlight && <span className="ml-2 text-xs bg-primary text-white px-2 py-0.5 rounded-full">New</span>}
+                      </CardTitle>
                       <CardDescription className="text-sm">Duration: {card.time}</CardDescription>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-6 flex flex-col h-40">
                     <p className="flex-grow">{card.description}</p>
                     <Button 
-                      className="mt-4 bg-primary hover:bg-primary/90 w-full" 
+                      className={`mt-4 ${card.highlight ? 'bg-primary/90 hover:bg-primary' : 'bg-primary hover:bg-primary/90'} w-full`}
                       onClick={() => navigate(card.path)}
                     >
                       {card.buttonText}

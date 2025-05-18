@@ -26,11 +26,8 @@ const AuthCallback = () => {
           // Get the intended destination or default to home page
           const from = location.state?.from?.pathname || '/';
           
-          // Add a small delay to ensure auth context is updated
-          setTimeout(() => {
-            // Successfully authenticated, redirect to intended destination
-            navigate(from, { replace: true });
-          }, 500);
+          // Navigate to intended destination
+          navigate(from, { replace: true });
         } else {
           // No session, redirect to sign in after a short delay
           setTimeout(() => navigate('/signin'), 1000);
