@@ -1,4 +1,4 @@
-
+import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "@/components/ui/use-toast";
@@ -12,6 +12,24 @@ const RouteGuard = ({ children }: RouteGuardProps) => {
   const { user, isLoading } = useAuth();
   const location = useLocation();
 
+  useEffect(() => {
+    console.log("RouteGuard rendered with:", { 
+      isAuthenticated: !!user, 
+      isLoading, 
+      currentPath: location.pathname 
+    });
+  }, [user, isLoading, location.pathname]);
+
+  // Public routes that don't require authentication
+  const publicRoutes = [
+    "/",
+    "/signin", 
+    "/signup", 
+    "/auth/callback", 
+    "/learn-more",
+    "/about"
+  ];
+
   // If auth is still loading, show loading indicator
   if (isLoading) {
     return (
@@ -22,26 +40,29 @@ const RouteGuard = ({ children }: RouteGuardProps) => {
     );
   }
 
-  // If user is not authenticated, redirect to sign in with current location
-  if (!user) {
-    // Only show toast if user is trying to access a protected route (not on initial load)
-    if (location.pathname !== "/" && 
-        location.pathname !== "/signin" && 
-        location.pathname !== "/signup" && 
-        location.pathname !== "/auth/callback" &&
-        location.pathname !== "/learn-more" &&
-        location.pathname !== "/about") {
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to access this feature",
-        variant: "destructive",
-      });
-    }
+  // Check if the current route is public
+  const isPublicRoute = publicRoutes.includes(location.pathname);
+
+  // If user is not authenticated and trying to access a protected route
+  if (!user && !isPublicRoute) {
+    console.log("Not authenticated, redirecting to signin from:", location.pathname);
+    
+    toast({
+      title: "Authentication required",
+      description: "Please sign in to access this feature",
+      variant: "destructive",
+    });
     
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
-  // If user is authenticated, render the protected route
+  // If user is authenticated but trying to access signin/signup, redirect to home
+  if (user && (location.pathname === "/signin" || location.pathname === "/signup")) {
+    console.log("Already authenticated, redirecting to home from:", location.pathname);
+    return <Navigate to="/" replace />;
+  }
+
+  // Otherwise, render the requested route
   return <>{children}</>;
 };
 

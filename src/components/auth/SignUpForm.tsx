@@ -32,6 +32,7 @@ const formSchema = z.object({
 const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [networkError, setNetworkError] = useState(false);
+  const [usernameExists, setUsernameExists] = useState(false);
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,12 +45,45 @@ const SignUpForm = () => {
     },
   });
 
+  // Check if username exists
+  const checkUsernameExists = async (username: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', username)
+        .limit(1);
+      
+      if (error) {
+        console.error("Error checking username:", error);
+        return false;
+      }
+      
+      return data && data.length > 0;
+    } catch (error) {
+      console.error("Exception checking username:", error);
+      return false;
+    }
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setNetworkError(false);
+    setUsernameExists(false);
     
     try {
-      console.log("Attempting to sign up with:", { email: values.email, username: values.username });
+      console.log("Checking if username exists:", values.username);
+      
+      // First check if username already exists
+      const exists = await checkUsernameExists(values.username);
+      
+      if (exists) {
+        setUsernameExists(true);
+        setIsLoading(false);
+        return;
+      }
+      
+      console.log("Username is available, attempting to sign up with:", { email: values.email, username: values.username });
       
       // Check if Supabase is properly initialized
       if (!supabase.auth) {
@@ -68,18 +102,26 @@ const SignUpForm = () => {
       });
 
       if (error) {
-        throw error;
+        if (error.message.includes("User already registered")) {
+          toast({
+            variant: "destructive",
+            title: "Email already registered",
+            description: "This email address is already in use. Please try signing in instead.",
+          });
+        } else {
+          throw error;
+        }
+      } else {
+        console.log("Sign up response:", data);
+        
+        toast({
+          title: "Verification email sent",
+          description: "Please check your email to verify your account.",
+        });
+        
+        // Redirect to sign in after successful sign up
+        navigate("/signin");
       }
-
-      console.log("Sign up response:", data);
-      
-      toast({
-        title: "Verification email sent",
-        description: "Please check your email to verify your account.",
-      });
-      
-      // Redirect to sign in after successful sign up
-      navigate("/signin");
     } catch (error: any) {
       console.error("Sign up error:", error);
       
@@ -116,6 +158,15 @@ const SignUpForm = () => {
         </Alert>
       )}
       
+      {usernameExists && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertTitle>Username Already Taken</AlertTitle>
+          <AlertDescription>
+            This username is already in use. Please choose a different username.
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -129,6 +180,10 @@ const SignUpForm = () => {
                     placeholder="johndoe" 
                     {...field} 
                     disabled={isLoading}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      setUsernameExists(false); // Reset the error when user types
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

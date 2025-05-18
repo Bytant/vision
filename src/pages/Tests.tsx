@@ -46,7 +46,7 @@ const Tests = () => {
       title: "Cataract Screening",
       description: "Screen for potential cataracts using our CNN-powered image analysis",
       icon: <Camera className="h-6 w-6" />,
-      path: "/tests/cataract",
+      path: "/cataract-test",
       time: "3-4 minutes",
       buttonText: "Start Screening",
       highlight: true

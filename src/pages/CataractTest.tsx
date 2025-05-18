@@ -16,6 +16,7 @@ const CataractTest = () => {
   const [result, setResult] = useState<'positive' | 'negative' | null>(null);
   const [confidence, setConfidence] = useState(0);
   const [imageData, setImageData] = useState<string | null>(null);
+  const [cameraActive, setCameraActive] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -26,12 +27,14 @@ const CataractTest = () => {
     return () => {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
+        setCameraActive(false);
       }
     };
   }, []);
 
   const startCamera = async () => {
     try {
+      console.log("Attempting to start camera...");
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
           facingMode: "user",
@@ -40,11 +43,31 @@ const CataractTest = () => {
         } 
       });
       
+      console.log("Camera access granted, stream:", stream);
       streamRef.current = stream;
       
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        videoRef.current.play();
+        
+        // Add event listener to know when video is ready
+        videoRef.current.onloadedmetadata = () => {
+          console.log("Video metadata loaded");
+          if (videoRef.current) {
+            videoRef.current.play()
+              .then(() => {
+                console.log("Video playback started");
+                setCameraActive(true);
+              })
+              .catch(err => {
+                console.error("Error playing video:", err);
+                toast({
+                  variant: "destructive",
+                  title: "Camera error",
+                  description: "There was an error starting the camera stream."
+                });
+              });
+          }
+        };
       }
       
       setStep(1);
@@ -63,26 +86,38 @@ const CataractTest = () => {
       const video = videoRef.current;
       const canvas = canvasRef.current;
       
+      console.log("Capturing image. Video dimensions:", video.videoWidth, video.videoHeight);
+      
       // Set canvas dimensions to match video
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
       
       // Draw current video frame to canvas
       const context = canvas.getContext('2d');
       if (context) {
+        console.log("Drawing video to canvas");
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
         // Convert canvas to data URL
-        const imageData = canvas.toDataURL('image/jpeg');
-        setImageData(imageData);
+        const imageDataUrl = canvas.toDataURL('image/jpeg');
+        console.log("Image captured, data URL length:", imageDataUrl.length);
+        setImageData(imageDataUrl);
         
         // Stop camera stream
         if (streamRef.current) {
           streamRef.current.getTracks().forEach(track => track.stop());
+          setCameraActive(false);
         }
         
         setStep(2);
       }
+    } else {
+      console.error("Video or canvas ref is null", { video: videoRef.current, canvas: canvasRef.current });
+      toast({
+        variant: "destructive",
+        title: "Capture failed",
+        description: "Could not capture image. Please try again."
+      });
     }
   };
 
@@ -169,6 +204,15 @@ const CataractTest = () => {
                 <canvas ref={canvasRef} className="hidden" />
                 
                 <div className="absolute inset-0 border-2 border-dashed border-white/70 m-8 rounded-lg pointer-events-none"></div>
+                
+                {!cameraActive && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
+                    <div className="text-center">
+                      <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+                      <p>Starting camera...</p>
+                    </div>
+                  </div>
+                )}
               </div>
               
               <div className="flex gap-3 mt-4">
@@ -177,6 +221,7 @@ const CataractTest = () => {
                   onClick={() => {
                     if (streamRef.current) {
                       streamRef.current.getTracks().forEach(track => track.stop());
+                      setCameraActive(false);
                     }
                     setStep(0);
                   }}
@@ -186,6 +231,7 @@ const CataractTest = () => {
                 <Button 
                   className="bg-primary hover:bg-primary/90"
                   onClick={captureImage}
+                  disabled={!cameraActive}
                 >
                   Capture Image
                 </Button>

@@ -1,5 +1,5 @@
 
-import { Eye, Glasses, Microscope } from "lucide-react";
+import { Eye, Glasses, Microscope, Camera } from "lucide-react";
 
 const Features = () => {
   return (
@@ -15,7 +15,7 @@ const Features = () => {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
           <div className="flex flex-col items-center space-y-4 p-6 border rounded-lg shadow-sm bg-white hover:shadow-md transition-all">
             <div className="p-4 bg-primary-light rounded-full">
               <Eye className="h-10 w-10 text-primary" />
@@ -32,6 +32,15 @@ const Features = () => {
             <h3 className="text-xl font-bold text-neutral-dark">Color Vision Assessment</h3>
             <p className="text-neutral text-center">
               Evaluate how well you perceive colors and identify potential color blindness issues.
+            </p>
+          </div>
+          <div className="flex flex-col items-center space-y-4 p-6 border rounded-lg shadow-sm bg-white hover:shadow-md transition-all">
+            <div className="p-4 bg-primary-light rounded-full">
+              <Camera className="h-10 w-10 text-primary" />
+            </div>
+            <h3 className="text-xl font-bold text-neutral-dark">Cataract Screening</h3>
+            <p className="text-neutral text-center">
+              Screen for potential cataracts using our advanced CNN-powered image analysis technology.
             </p>
           </div>
           <div className="flex flex-col items-center space-y-4 p-6 border rounded-lg shadow-sm bg-white hover:shadow-md transition-all">
