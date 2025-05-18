@@ -11,7 +11,7 @@ import { printTestResults } from "@/utils/printResults";
 const TestResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { score, totalQuestions, testType, result } = location.state || {};
+  const { score, totalQuestions, testType, testResult } = location.state || {};
   const resultsRef = useRef<HTMLDivElement>(null);
   
   const getTestTitle = () => {
@@ -126,7 +126,7 @@ const TestResults = () => {
       testType: getTestTitle(),
       score,
       totalQuestions,
-      result,
+      result: testResult,
       testDate: new Date().toLocaleDateString()
     });
     
@@ -177,7 +177,7 @@ const TestResults = () => {
                     </div>
                   </div>
                   <CardTitle className="text-2xl text-center">Your Score: {score}/{totalQuestions} ({scorePercentage}%)</CardTitle>
-                  <CardDescription className="text-center text-base mt-2">{result}</CardDescription>
+                  <CardDescription className="text-center text-base mt-2">{testResult}</CardDescription>
                 </CardHeader>
                 
                 <CardContent className="pb-6 pt-2">
