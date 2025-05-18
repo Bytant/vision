@@ -22,12 +22,13 @@ const CataractTest = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  // Clean up camera stream when component unmounts
+  // Clean up camera stream when component unmounts or changes
   useEffect(() => {
     return () => {
       if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-        setCameraActive(false);
+        streamRef.current.getTracks().forEach(track => {
+          track.stop();
+        });
       }
     };
   }, []);
@@ -35,6 +36,12 @@ const CataractTest = () => {
   const startCamera = async () => {
     try {
       console.log("Attempting to start camera...");
+      
+      // Stop any existing stream before starting a new one
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+      
       const stream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
           facingMode: "user",
@@ -43,19 +50,16 @@ const CataractTest = () => {
         } 
       });
       
-      console.log("Camera access granted, stream:", stream);
+      console.log("Camera access granted");
       streamRef.current = stream;
       
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        
-        // Add event listener to know when video is ready
         videoRef.current.onloadedmetadata = () => {
-          console.log("Video metadata loaded");
           if (videoRef.current) {
             videoRef.current.play()
               .then(() => {
-                console.log("Video playback started");
+                console.log("Video playing successfully");
                 setCameraActive(true);
               })
               .catch(err => {
@@ -68,6 +72,8 @@ const CataractTest = () => {
               });
           }
         };
+      } else {
+        console.error("Video reference is null");
       }
       
       setStep(1);
@@ -86,7 +92,7 @@ const CataractTest = () => {
       const video = videoRef.current;
       const canvas = canvasRef.current;
       
-      console.log("Capturing image. Video dimensions:", video.videoWidth, video.videoHeight);
+      console.log("Capturing image from video");
       
       // Set canvas dimensions to match video
       canvas.width = video.videoWidth || 640;
@@ -95,12 +101,11 @@ const CataractTest = () => {
       // Draw current video frame to canvas
       const context = canvas.getContext('2d');
       if (context) {
-        console.log("Drawing video to canvas");
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         
         // Convert canvas to data URL
         const imageDataUrl = canvas.toDataURL('image/jpeg');
-        console.log("Image captured, data URL length:", imageDataUrl.length);
+        console.log("Image captured successfully, data URL length:", imageDataUrl.length);
         setImageData(imageDataUrl);
         
         // Stop camera stream
@@ -110,6 +115,8 @@ const CataractTest = () => {
         }
         
         setStep(2);
+      } else {
+        console.error("Could not get canvas context");
       }
     } else {
       console.error("Video or canvas ref is null", { video: videoRef.current, canvas: canvasRef.current });

@@ -62,6 +62,11 @@ const AppWithProviders = () => (
             <ContrastSensitivityTest />
           </RouteGuard>
         } />
+        <Route path="/cataract-test" element={
+          <RouteGuard>
+            <CataractTest />
+          </RouteGuard>
+        } />
         <Route path="/tests/cataract" element={
           <RouteGuard>
             <CataractTest />
