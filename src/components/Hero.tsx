@@ -47,7 +47,7 @@ const Hero = () => {
           <div className="mx-auto flex justify-center lg:justify-end">
             <div className="relative h-[350px] w-[350px] sm:h-[400px] sm:w-[400px] md:h-[450px] md:w-[450px] lg:h-[500px] lg:w-[500px]">
               <img
-                src="https://images.unsplash.com/photo-1590510616176-67c2c1ae73b9"
+                src="/vision.png"
                 alt="Eye doctor examining patient's vision"
                 className="object-cover rounded-full bg-secondary-light p-2"
                 width={500}
