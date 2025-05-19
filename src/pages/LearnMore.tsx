@@ -44,8 +44,8 @@ const LearnMore = () => {
                   <div className="overflow-hidden rounded-lg border border-gray-200">
                     <AspectRatio ratio={16/9}>
                       <img 
-                        src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d" 
-                        alt="Person using desktop computer at correct distance" 
+                        src="https://images.unsplash.com/photo-1581091007718-0c50d599bfd0" 
+                        alt="Person taking an eye test on desktop computer" 
                         className="object-cover w-full h-full"
                       />
                     </AspectRatio>
@@ -78,8 +78,8 @@ const LearnMore = () => {
                   <div className="overflow-hidden rounded-lg border border-gray-200">
                     <AspectRatio ratio={16/9}>
                       <img 
-                        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
-                        alt="Person holding mobile device at arm's length" 
+                        src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89" 
+                        alt="Person using a vision test app on a mobile device" 
                         className="object-cover w-full h-full"
                       />
                     </AspectRatio>
@@ -125,8 +125,8 @@ const LearnMore = () => {
                   <div className="overflow-hidden rounded-lg border border-gray-200">
                     <AspectRatio ratio={4/3}>
                       <img 
-                        src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6" 
-                        alt="Proper testing distance diagram" 
+                        src="https://images.unsplash.com/photo-1540803736068-7ad04a4b5d38" 
+                        alt="Proper distance for eye testing diagram" 
                         className="object-cover w-full h-full"
                       />
                     </AspectRatio>
