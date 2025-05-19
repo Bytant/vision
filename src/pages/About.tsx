@@ -54,8 +54,8 @@ const About = () => {
               <div className="lg:order-2">
                 <div className="relative h-[400px] overflow-hidden rounded-lg">
                   <img
-                    src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
-                    alt="Person using online vision test"
+                    src="https://images.unsplash.com/photo-1579684385127-1ef15d508118"
+                    alt="Eye doctor examining patient's eyes"
                     className="object-cover w-full h-full"
                   />
                 </div>

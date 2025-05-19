@@ -44,7 +44,7 @@ const LearnMore = () => {
                   <div className="overflow-hidden rounded-lg border border-gray-200">
                     <AspectRatio ratio={16/9}>
                       <img 
-                        src="/laptop.jpg" 
+                        src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d" 
                         alt="Person using desktop computer at correct distance" 
                         className="object-cover w-full h-full"
                       />
@@ -78,7 +78,7 @@ const LearnMore = () => {
                   <div className="overflow-hidden rounded-lg border border-gray-200">
                     <AspectRatio ratio={16/9}>
                       <img 
-                        src="/phone.webp" 
+                        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
                         alt="Person holding mobile device at arm's length" 
                         className="object-cover w-full h-full"
                       />
@@ -125,7 +125,7 @@ const LearnMore = () => {
                   <div className="overflow-hidden rounded-lg border border-gray-200">
                     <AspectRatio ratio={4/3}>
                       <img 
-                        src="/egonomics.jpg" 
+                        src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6" 
                         alt="Proper testing distance diagram" 
                         className="object-cover w-full h-full"
                       />

@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -7,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { toast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-import { Camera, ImageIcon, Loader2, Eye, CheckCircle, XCircle } from "lucide-react";
+import { Camera, Loader2, Eye, CheckCircle, XCircle } from "lucide-react";
 
 const CataractTest = () => {
   const navigate = useNavigate();
@@ -18,6 +17,7 @@ const CataractTest = () => {
   const [imageData, setImageData] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [cameraPermissionDenied, setCameraPermissionDenied] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -37,6 +37,7 @@ const CataractTest = () => {
   const startCamera = async () => {
     try {
       setCameraError(null);
+      setCameraPermissionDenied(false);
       console.log("Attempting to start camera...");
       
       // Stop any existing stream before starting a new one
@@ -61,6 +62,8 @@ const CataractTest = () => {
       if (videoRef.current) {
         console.log("Setting video source object");
         videoRef.current.srcObject = stream;
+        
+        // Wait for video to be ready before playing
         videoRef.current.onloadedmetadata = () => {
           console.log("Video metadata loaded, attempting to play");
           if (videoRef.current) {
@@ -88,6 +91,7 @@ const CataractTest = () => {
       setStep(1);
     } catch (err) {
       console.error("Error accessing camera:", err);
+      setCameraPermissionDenied(true);
       setCameraError(err instanceof Error ? err.message : "Unknown camera error");
       toast({
         variant: "destructive",
@@ -209,7 +213,20 @@ const CataractTest = () => {
             </CardHeader>
             <CardContent className="space-y-4 items-center flex flex-col">
               <div className="relative w-full max-w-md aspect-video bg-black rounded-lg overflow-hidden">
-                {cameraError ? (
+                {cameraPermissionDenied ? (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white p-4">
+                    <div className="text-center">
+                      <XCircle className="h-8 w-8 mx-auto mb-2 text-red-500" />
+                      <p>Camera access denied. Please check your browser settings and allow camera access.</p>
+                      <Button 
+                        className="mt-4 bg-primary hover:bg-primary/90" 
+                        onClick={startCamera}
+                      >
+                        Try Again
+                      </Button>
+                    </div>
+                  </div>
+                ) : cameraError ? (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white p-4">
                     <div className="text-center">
                       <XCircle className="h-8 w-8 mx-auto mb-2 text-red-500" />
